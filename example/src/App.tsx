@@ -1,12 +1,12 @@
 import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import CommentForm from "./CommentForm";
 import ContextMenu, { ContextMenuProps } from "./ContextMenu";
-import ExpandableTip from "./ExpandableTip";
+// import ExpandableTip from "./ExpandableTip";
 import HighlightContainer from "./HighlightContainer";
 import Sidebar from "./Sidebar";
 import Toolbar from "./Toolbar";
 import {
-  GhostHighlight,
+  // GhostHighlight,
   Highlight,
   PdfHighlighter,
   PdfHighlighterUtils,
@@ -19,10 +19,12 @@ import { testHighlights as _testHighlights } from "./test-highlights";
 import { CommentedHighlight } from "./types";
 
 const TEST_HIGHLIGHTS = _testHighlights;
-const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
-const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
+const PRIMARY_PDF_URL = "https://cicaaidevapi.blob.core.windows.net/documents/users/82727d00-b9c9-472b-b45e-cd7bcab14e7a/projects/00000000-0000-0000-0000-000000000001/2024.12.17_CICA_GT_01.pdf?se=2025-05-16T00%3A14%3A05Z&sp=r&sv=2025-05-05&sr=b&sig=BFS0vPD0ZncruhIam7%2BbNQKQlH%2B2NLmBu97SF7EqPm8%3D";
+const SECONDARY_PDF_URL = "https://cicaaidevapi.blob.core.windows.net/documents/users/82727d00-b9c9-472b-b45e-cd7bcab14e7a/projects/00000000-0000-0000-0000-000000000001/2024.12.17_CICA_GT_01.pdf?se=2025-05-16T00%3A14%3A05Z&sp=r&sv=2025-05-05&sr=b&sig=BFS0vPD0ZncruhIam7%2BbNQKQlH%2B2NLmBu97SF7EqPm8%3D";
+// const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
+// const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
-const getNextId = () => String(Math.random()).slice(2);
+// const getNextId = () => String(Math.random()).slice(2);
 
 const parseIdFromHash = () => {
   return document.location.hash.slice("#highlight-".length);
@@ -35,12 +37,12 @@ const resetHash = () => {
 const App = () => {
   const [url, setUrl] = useState(PRIMARY_PDF_URL);
   const [highlights, setHighlights] = useState<Array<CommentedHighlight>>(
-    TEST_HIGHLIGHTS[PRIMARY_PDF_URL] ?? [],
+    TEST_HIGHLIGHTS[PRIMARY_PDF_URL] ?? []
   );
   const currentPdfIndexRef = useRef(0);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(
-    undefined,
+    undefined
   );
   const [highlightPen, setHighlightPen] = useState<boolean>(false);
 
@@ -71,7 +73,7 @@ const App = () => {
 
   const handleContextMenu = (
     event: MouseEvent<HTMLDivElement>,
-    highlight: ViewportHighlight<CommentedHighlight>,
+    highlight: ViewportHighlight<CommentedHighlight>
   ) => {
     event.preventDefault();
 
@@ -83,10 +85,10 @@ const App = () => {
     });
   };
 
-  const addHighlight = (highlight: GhostHighlight, comment: string) => {
-    console.log("Saving highlight", highlight);
-    setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
-  };
+  // const addHighlight = (highlight: GhostHighlight, comment: string) => {
+  //   console.log("Saving highlight", highlight);
+  //   setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
+  // };
 
   const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
     console.log("Deleting highlight", highlight);
@@ -95,13 +97,13 @@ const App = () => {
 
   const editHighlight = (
     idToUpdate: string,
-    edit: Partial<CommentedHighlight>,
+    edit: Partial<CommentedHighlight>
   ) => {
     console.log(`Editing highlight ${idToUpdate} with `, edit);
     setHighlights(
       highlights.map((highlight) =>
-        highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight,
-      ),
+        highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight
+      )
     );
   };
 
@@ -154,8 +156,9 @@ const App = () => {
   }, [scrollToHighlightFromHash]);
 
   return (
-    <div className="App" style={{ display: "flex", height: "100vh" }}>
-      <Sidebar
+    <div className="App" >
+    {/* <div className="App" style={{ display: "flex", height: "100vh" }}> */}
+      {/* <Sidebar
         highlights={highlights}
         resetHighlights={resetHighlights}
         toggleDocument={toggleDocument}
@@ -169,35 +172,56 @@ const App = () => {
           flexGrow: 1,
         }}
       >
-        <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} />
+        <Toolbar
+          setPdfScaleValue={(value) => setPdfScaleValue(value)}
+          toggleHighlightPen={() => setHighlightPen(!highlightPen)}
+        /> */}
         <PdfLoader document={url}>
           {(pdfDocument) => (
             <PdfHighlighter
-              enableAreaSelection={(event) => event.altKey}
+              // enableAreaSelection={(event) => event.altKey}
               pdfDocument={pdfDocument}
-              onScrollAway={resetHash}
+              onScrollAway={() => {}}
               utilsRef={(_pdfHighlighterUtils) => {
-                highlighterUtilsRef.current = _pdfHighlighterUtils;
+                // highlighterUtilsRef.current = _pdfHighlighterUtils;
               }}
-              pdfScaleValue={pdfScaleValue}
-              textSelectionColor={highlightPen ? "rgba(255, 226, 143, 1)" : undefined}
-              onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
-              selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
-              highlights={highlights}
-              style={{
-                height: "calc(100% - 41px)",
-              }}
+              // pdfScaleValue={pdfScaleValue}
+              // textSelectionColor={
+              //   highlightPen ? "rgba(255, 226, 143, 1)" : undefined
+              // }
+              // onSelection={
+              //   highlightPen
+              //     ? (selection) =>
+              //         addHighlight(selection.makeGhostHighlight(), "")
+              //     : undefined
+              // }
+              // selectionTip={
+              //   highlightPen ? undefined : (
+              //     <ExpandableTip addHighlight={addHighlight} />
+              //   )
+              // }
+              highlights={[]}
+              // highlights={highlights}
+              // style={{
+              //   height: "calc(100% - 41px)",
+              // }}
             >
-              <HighlightContainer
+              {/* <HighlightContainer
+                enableEdit={false}
                 editHighlight={editHighlight}
                 onContextMenu={handleContextMenu}
+              /> */}
+              <HighlightContainer
+                enableEdit={false}
+                editHighlight={() => {}}
+                onContextMenu={() => {}}
               />
             </PdfHighlighter>
           )}
         </PdfLoader>
-      </div>
+      {/* </div>
 
-      {contextMenu && <ContextMenu {...contextMenu} />}
+      {contextMenu && <ContextMenu {...contextMenu} />} */}
     </div>
   );
 };

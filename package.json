@@ -1,18 +1,14 @@
 {
-  "name": "react-pdf-highlighter-extended",
+  "name": "react-pdf-highlighter-optimized",
   "type": "module",
-  "version": "8.1.0",
+  "version": "1.0.0",
   "description": "Set of modern React components for PDF highlighting",
-  "author": "Daniel Arnould <daniel.s.arnould@gmail.com>",
+  "author": "Mathieu L <emergydev@gmail.com>",
   "license": "MIT",
   "contributors": [
     {
-      "name": "Daniel Arnould",
-      "email": "daniel.s.arnould@gmail.com"
-    },
-    {
-      "name": "Artem Tyurin",
-      "email": "artem.tyurin@gmail.com"
+      "name": "Mathieu L",
+      "email": "emergydev@gmail.com"
     }
   ],
   "keywords": [
@@ -39,11 +35,11 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "pdfjs-dist": "^4.10.38"
   },
   "dependencies": {
     "lodash.debounce": "^4.0.8",
-    "pdfjs-dist": "^4.4.168",
     "react-rnd": "^10.4.11"
   },
   "repository": {

@@ -32,6 +32,11 @@ export interface AreaHighlightProps {
   isScrolledTo?: boolean;
 
   /**
+   * Enable or disable editing of the highlight area.
+   */
+  enableEdit?: boolean;
+
+  /**
    * react-rnd bounds on the highlight area. This is useful for preventing the user
    * moving the highlight off the viewer/page.  See [react-rnd docs](https://github.com/bokuweb/react-rnd).
    */
@@ -63,6 +68,7 @@ export interface AreaHighlightProps {
 export const AreaHighlight = ({
   highlight,
   onChange,
+  enableEdit,
   isScrolledTo,
   bounds,
   onContextMenu,
@@ -84,7 +90,10 @@ export const AreaHighlight = ({
     >
       <Rnd
         className="AreaHighlight__part"
+        enableResizing={enableEdit}
+        disableDragging={!enableEdit}
         onDragStop={(_, data) => {
+          if(!enableEdit) return;
           const boundingRect: LTWHP = {
             ...highlight.position.boundingRect,
             top: data.y,
@@ -94,6 +103,7 @@ export const AreaHighlight = ({
           onChange && onChange(boundingRect);
         }}
         onResizeStop={(_mouseEvent, _direction, ref, _delta, position) => {
+          if(!enableEdit) return;
           const boundingRect: LTWHP = {
             top: position.y,
             left: position.x,
@@ -104,8 +114,14 @@ export const AreaHighlight = ({
 
           onChange && onChange(boundingRect);
         }}
-        onDragStart={onEditStart}
-        onResizeStart={onEditStart}
+        onDragStart={(...args) => {
+          if(!enableEdit) return;
+          onEditStart && onEditStart();
+        }}
+        onResizeStart={(...args) => {
+          if(!enableEdit) return;
+          onEditStart && onEditStart();
+        }}
         default={{
           x: highlight.position.boundingRect.left,
           y: highlight.position.boundingRect.top,

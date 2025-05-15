@@ -185,6 +185,7 @@ export const MouseSelection = ({
     };
 
     const handleMouseMove = (event: MouseEvent) => {
+
       if (!rootRef.current || !start || locked) return;
       setEnd(getContainerCoords(container, event.pageX, event.pageY));
     };
