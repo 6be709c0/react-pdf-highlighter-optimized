@@ -8,7 +8,7 @@ import {
   ViewportHighlight,
   useHighlightContainerContext,
   usePdfHighlighterContext,
-} from "./react-pdf-highlighter-extended";
+} from "./react-pdf-highlighter-optimized";
 import { CommentedHighlight } from "./types";
 
 interface HighlightContainerProps {
@@ -33,6 +33,7 @@ const HighlightContainer = ({
     viewportToScaled,
     screenshot,
     isScrolledTo,
+    // isVisible,
     highlightBindings,
   } = useHighlightContainerContext<CommentedHighlight>();
 
@@ -42,18 +43,19 @@ const HighlightContainer = ({
     highlight.type === "text" ? (
       <TextHighlight
         isScrolledTo={isScrolledTo}
+        // isScrolledTo={isScrolledTo || isVisible}
         highlight={highlight}
-        onContextMenu={(event) =>
+        onContextMenu={(event:any) =>
           onContextMenu && onContextMenu(event, highlight)
         }
       />
     ) : (
       <AreaHighlight
         isScrolledTo={isScrolledTo}
+        // isScrolledTo={isScrolledTo || isVisible}
         highlight={highlight}
         enableEdit={false}
         onChange={(boundingRect) => {
-          console.log("AAA");
           if (!enableEdit) return;
           const edit = {
             position: {

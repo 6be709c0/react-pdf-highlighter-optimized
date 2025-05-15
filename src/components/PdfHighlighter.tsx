@@ -338,7 +338,6 @@ export const PdfHighlighter = ({
     const content: Content = {
       text: selection.toString().split("\n").join(" "), // Make all line breaks spaces
     };
-    console.log("SELECTION", content);
     selectionRef.current = {
       content,
       type: "text",
@@ -487,7 +486,6 @@ export const PdfHighlighter = ({
 
     const container = containerNodeRef.current;
     const selection = getWindow(container).getSelection();
-    console.log("EEEE", selection);
     if (!container || !selection) return;
     selection.removeAllRanges();
   };
@@ -522,11 +520,24 @@ export const PdfHighlighter = ({
 
     // wait for scrolling to finish
     setTimeout(() => {
-      viewerRef.current!.container.addEventListener("scroll", handleScroll, {
-        once: true,
-      });
+      // viewerRef.current!.container.addEventListener("scroll", handleScroll, {
+      //   once: true,
+      // });
     }, 100);
   };
+
+  // const isVisible = (highlight: Highlight) => {
+
+  //   scrolledToHighlightIdRef.current = highlight.id;
+  //   renderHighlightLayers();
+
+  //   // wait for scrolling to finish
+  //   setTimeout(() => {
+  //     viewerRef.current!.container.addEventListener("scroll", handleScroll, {
+  //       once: true,
+  //     });
+  //   }, 100);
+  // };
 
   const pdfHighlighterUtils: PdfHighlighterUtils = {
     isEditingOrHighlighting,

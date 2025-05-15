@@ -32,6 +32,11 @@ export interface AreaHighlightProps {
   isScrolledTo?: boolean;
 
   /**
+   * By default, this will render the highlight red.
+   */
+  isVisible?: boolean;
+
+  /**
    * Enable or disable editing of the highlight area.
    */
   enableEdit?: boolean;

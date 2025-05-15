@@ -4,7 +4,7 @@ import {
   GhostHighlight,
   PdfSelection,
   usePdfHighlighterContext,
-} from "./react-pdf-highlighter-extended";
+} from "./react-pdf-highlighter-optimized";
 import "./style/ExpandableTip.css";
 
 interface ExpandableTipProps {

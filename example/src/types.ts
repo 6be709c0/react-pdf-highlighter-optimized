@@ -1,4 +1,4 @@
-import { Highlight, Content } from "./react-pdf-highlighter-extended";
+import { Highlight, Content } from "./react-pdf-highlighter-optimized";
 
 export interface CommentedHighlight extends Highlight {
   content: Content;

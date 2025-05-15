@@ -1,229 +1,162 @@
-import React, { MouseEvent, useEffect, useRef, useState } from "react";
-import CommentForm from "./CommentForm";
-import ContextMenu, { ContextMenuProps } from "./ContextMenu";
-// import ExpandableTip from "./ExpandableTip";
-import HighlightContainer from "./HighlightContainer";
-import Sidebar from "./Sidebar";
-import Toolbar from "./Toolbar";
-import {
-  // GhostHighlight,
-  Highlight,
-  PdfHighlighter,
-  PdfHighlighterUtils,
-  PdfLoader,
-  Tip,
-  ViewportHighlight,
-} from "./react-pdf-highlighter-extended";
+import React from "react";
+// import React, { MouseEvent, useEffect, useRef, useState } from "react";
+// import CommentForm from "./CommentForm";
+// import { ContextMenuProps } from "./ContextMenu";
+// // import ExpandableTip from "./ExpandableTip";
+// import HighlightContainer from "./HighlightContainer";
+// import {
+//   // GhostHighlight,
+//   Highlight,
+//   PdfHighlighter,
+//   PdfHighlighterUtils,
+//   PdfLoader,
+//   Tip,
+//   ViewportHighlight,
+// } from "./react-pdf-highlighter-optimized";
 import "./style/App.css";
 import { testHighlights as _testHighlights } from "./test-highlights";
-import { CommentedHighlight } from "./types";
+// import { CommentedHighlight } from "./types";
 
-const TEST_HIGHLIGHTS = _testHighlights;
-const PRIMARY_PDF_URL = "https://cicaaidevapi.blob.core.windows.net/documents/users/82727d00-b9c9-472b-b45e-cd7bcab14e7a/projects/00000000-0000-0000-0000-000000000001/2024.12.17_CICA_GT_01.pdf?se=2025-05-16T00%3A14%3A05Z&sp=r&sv=2025-05-05&sr=b&sig=BFS0vPD0ZncruhIam7%2BbNQKQlH%2B2NLmBu97SF7EqPm8%3D";
-const SECONDARY_PDF_URL = "https://cicaaidevapi.blob.core.windows.net/documents/users/82727d00-b9c9-472b-b45e-cd7bcab14e7a/projects/00000000-0000-0000-0000-000000000001/2024.12.17_CICA_GT_01.pdf?se=2025-05-16T00%3A14%3A05Z&sp=r&sv=2025-05-05&sr=b&sig=BFS0vPD0ZncruhIam7%2BbNQKQlH%2B2NLmBu97SF7EqPm8%3D";
-// const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
-// const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
+// const TEST_HIGHLIGHTS = _testHighlights;
+// const PRIMARY_PDF_URL =
+//   "https://cicaaidevapi.blob.core.windows.net/documents/users/82727d00-b9c9-472b-b45e-cd7bcab14e7a/projects/00000000-0000-0000-0000-000000000001/2024.12.17_CICA_GT_01.pdf?se=2025-05-16T00%3A14%3A05Z&sp=r&sv=2025-05-05&sr=b&sig=BFS0vPD0ZncruhIam7%2BbNQKQlH%2B2NLmBu97SF7EqPm8%3D";
+// const SECONDARY_PDF_URL =
+//   "https://cicaaidevapi.blob.core.windows.net/documents/users/82727d00-b9c9-472b-b45e-cd7bcab14e7a/projects/00000000-0000-0000-0000-000000000001/2024.12.17_CICA_GT_01.pdf?se=2025-05-16T00%3A14%3A05Z&sp=r&sv=2025-05-05&sr=b&sig=BFS0vPD0ZncruhIam7%2BbNQKQlH%2B2NLmBu97SF7EqPm8%3D";
+// // const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
+// // const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
-// const getNextId = () => String(Math.random()).slice(2);
+// // const getNextId = () => String(Math.random()).slice(2);
 
-const parseIdFromHash = () => {
-  return document.location.hash.slice("#highlight-".length);
-};
+// const parseIdFromHash = () => {
+//   return document.location.hash.slice("#highlight-".length);
+// };
 
-const resetHash = () => {
-  document.location.hash = "";
-};
+// const resetHash = () => {
+//   document.location.hash = "";
+// };
 
 const App = () => {
-  const [url, setUrl] = useState(PRIMARY_PDF_URL);
-  const [highlights, setHighlights] = useState<Array<CommentedHighlight>>(
-    TEST_HIGHLIGHTS[PRIMARY_PDF_URL] ?? []
-  );
-  const currentPdfIndexRef = useRef(0);
-  const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
-  const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(
-    undefined
-  );
-  const [highlightPen, setHighlightPen] = useState<boolean>(false);
+  // const [url, setUrl] = useState(PRIMARY_PDF_URL);
+  // const [highlights, setHighlights] = useState<Array<CommentedHighlight>>(
+  //   TEST_HIGHLIGHTS[PRIMARY_PDF_URL] ?? []
+  // );
+  // const currentPdfIndexRef = useRef(0);
+  // const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
+  // const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(
+  //   undefined
+  // );
+  // const [highlightPen, setHighlightPen] = useState<boolean>(false);
 
-  // Refs for PdfHighlighter utilities
-  const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
+  // // Refs for PdfHighlighter utilities
+  // const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
-  const toggleDocument = () => {
-    const urls = [PRIMARY_PDF_URL, SECONDARY_PDF_URL];
-    currentPdfIndexRef.current = (currentPdfIndexRef.current + 1) % urls.length;
-    setUrl(urls[currentPdfIndexRef.current]);
-    setHighlights(TEST_HIGHLIGHTS[urls[currentPdfIndexRef.current]] ?? []);
-  };
-
-  // Click listeners for context menu
-  useEffect(() => {
-    const handleClick = () => {
-      if (contextMenu) {
-        setContextMenu(null);
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, [contextMenu]);
-
-  const handleContextMenu = (
-    event: MouseEvent<HTMLDivElement>,
-    highlight: ViewportHighlight<CommentedHighlight>
-  ) => {
-    event.preventDefault();
-
-    setContextMenu({
-      xPos: event.clientX,
-      yPos: event.clientY,
-      deleteHighlight: () => deleteHighlight(highlight),
-      editComment: () => editComment(highlight),
-    });
-  };
-
-  // const addHighlight = (highlight: GhostHighlight, comment: string) => {
-  //   console.log("Saving highlight", highlight);
-  //   setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
+  // const toggleDocument = () => {
+  //   const urls = [PRIMARY_PDF_URL, SECONDARY_PDF_URL];
+  //   currentPdfIndexRef.current = (currentPdfIndexRef.current + 1) % urls.length;
+  //   setUrl(urls[currentPdfIndexRef.current]);
+  //   setHighlights(TEST_HIGHLIGHTS[urls[currentPdfIndexRef.current]] ?? []);
   // };
 
-  const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
-    console.log("Deleting highlight", highlight);
-    setHighlights(highlights.filter((h) => h.id != highlight.id));
-  };
+  // // Click listeners for context menu
+  // useEffect(() => {
+  //   const handleClick = () => {
+  //     if (contextMenu) {
+  //       setContextMenu(null);
+  //     }
+  //   };
 
-  const editHighlight = (
-    idToUpdate: string,
-    edit: Partial<CommentedHighlight>
-  ) => {
-    console.log(`Editing highlight ${idToUpdate} with `, edit);
-    setHighlights(
-      highlights.map((highlight) =>
-        highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight
-      )
-    );
-  };
+  //   document.addEventListener("click", handleClick);
 
-  const resetHighlights = () => {
-    setHighlights([]);
-  };
+  //   return () => {
+  //     document.removeEventListener("click", handleClick);
+  //   };
+  // }, [contextMenu]);
 
-  const getHighlightById = (id: string) => {
-    return highlights.find((highlight) => highlight.id === id);
-  };
+  // const handleContextMenu = (
+  //   event: MouseEvent<HTMLDivElement>,
+  //   highlight: ViewportHighlight<CommentedHighlight>
+  // ) => {
+  //   event.preventDefault();
 
-  // Open comment tip and update highlight with new user input
-  const editComment = (highlight: ViewportHighlight<CommentedHighlight>) => {
-    if (!highlighterUtilsRef.current) return;
+  //   setContextMenu({
+  //     xPos: event.clientX,
+  //     yPos: event.clientY,
+  //     deleteHighlight: () => deleteHighlight(highlight),
+  //     editComment: () => editComment(highlight),
+  //   });
+  // };
 
-    const editCommentTip: Tip = {
-      position: highlight.position,
-      content: (
-        <CommentForm
-          placeHolder={highlight.comment}
-          onSubmit={(input) => {
-            editHighlight(highlight.id, { comment: input });
-            highlighterUtilsRef.current!.setTip(null);
-            highlighterUtilsRef.current!.toggleEditInProgress(false);
-          }}
-        ></CommentForm>
-      ),
-    };
+  // // const addHighlight = (highlight: GhostHighlight, comment: string) => {
+  // //   console.log("Saving highlight", highlight);
+  // //   setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
+  // // };
 
-    highlighterUtilsRef.current.setTip(editCommentTip);
-    highlighterUtilsRef.current.toggleEditInProgress(true);
-  };
+  // const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
+  //   console.log("Deleting highlight", highlight);
+  //   setHighlights(highlights.filter((h) => h.id != highlight.id));
+  // };
 
-  // Scroll to highlight based on hash in the URL
-  const scrollToHighlightFromHash = () => {
-    const highlight = getHighlightById(parseIdFromHash());
+  // const editHighlight = (
+  //   idToUpdate: string,
+  //   edit: Partial<CommentedHighlight>
+  // ) => {
+  //   console.log(`Editing highlight ${idToUpdate} with `, edit);
+  //   setHighlights(
+  //     highlights.map((highlight) =>
+  //       highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight
+  //     )
+  //   );
+  // };
 
-    if (highlight && highlighterUtilsRef.current) {
-      highlighterUtilsRef.current.scrollToHighlight(highlight);
-    }
-  };
+  // const resetHighlights = () => {
+  //   setHighlights([]);
+  // };
 
-  // Hash listeners for autoscrolling to highlights
-  useEffect(() => {
-    window.addEventListener("hashchange", scrollToHighlightFromHash);
+  // const getHighlightById = (id: string) => {
+  //   return highlights.find((highlight) => highlight.id === id);
+  // };
 
-    return () => {
-      window.removeEventListener("hashchange", scrollToHighlightFromHash);
-    };
-  }, [scrollToHighlightFromHash]);
+  // // Open comment tip and update highlight with new user input
+  // const editComment = (highlight: ViewportHighlight<CommentedHighlight>) => {
+  //   if (!highlighterUtilsRef.current) return;
 
-  return (
-    <div className="App" >
-    {/* <div className="App" style={{ display: "flex", height: "100vh" }}> */}
-      {/* <Sidebar
-        highlights={highlights}
-        resetHighlights={resetHighlights}
-        toggleDocument={toggleDocument}
-      />
-      <div
-        style={{
-          height: "100vh",
-          width: "75vw",
-          overflow: "hidden",
-          position: "relative",
-          flexGrow: 1,
-        }}
-      >
-        <Toolbar
-          setPdfScaleValue={(value) => setPdfScaleValue(value)}
-          toggleHighlightPen={() => setHighlightPen(!highlightPen)}
-        /> */}
-        <PdfLoader document={url}>
-          {(pdfDocument) => (
-            <PdfHighlighter
-              // enableAreaSelection={(event) => event.altKey}
-              pdfDocument={pdfDocument}
-              onScrollAway={() => {}}
-              utilsRef={(_pdfHighlighterUtils) => {
-                // highlighterUtilsRef.current = _pdfHighlighterUtils;
-              }}
-              // pdfScaleValue={pdfScaleValue}
-              // textSelectionColor={
-              //   highlightPen ? "rgba(255, 226, 143, 1)" : undefined
-              // }
-              // onSelection={
-              //   highlightPen
-              //     ? (selection) =>
-              //         addHighlight(selection.makeGhostHighlight(), "")
-              //     : undefined
-              // }
-              // selectionTip={
-              //   highlightPen ? undefined : (
-              //     <ExpandableTip addHighlight={addHighlight} />
-              //   )
-              // }
-              highlights={[]}
-              // highlights={highlights}
-              // style={{
-              //   height: "calc(100% - 41px)",
-              // }}
-            >
-              {/* <HighlightContainer
-                enableEdit={false}
-                editHighlight={editHighlight}
-                onContextMenu={handleContextMenu}
-              /> */}
-              <HighlightContainer
-                enableEdit={false}
-                editHighlight={() => {}}
-                onContextMenu={() => {}}
-              />
-            </PdfHighlighter>
-          )}
-        </PdfLoader>
-      {/* </div>
+  //   const editCommentTip: Tip = {
+  //     position: highlight.position,
+  //     content: (
+  //       <CommentForm
+  //         placeHolder={highlight.comment}
+  //         onSubmit={(input) => {
+  //           editHighlight(highlight.id, { comment: input });
+  //           highlighterUtilsRef.current!.setTip(null);
+  //           highlighterUtilsRef.current!.toggleEditInProgress(false);
+  //         }}
+  //       ></CommentForm>
+  //     ),
+  //   };
 
-      {contextMenu && <ContextMenu {...contextMenu} />} */}
-    </div>
-  );
+  //   highlighterUtilsRef.current.setTip(editCommentTip);
+  //   highlighterUtilsRef.current.toggleEditInProgress(true);
+  // };
+
+  // // Scroll to highlight based on hash in the URL
+  // const scrollToHighlightFromHash = () => {
+  //   const highlight = getHighlightById(parseIdFromHash());
+
+  //   if (highlight && highlighterUtilsRef.current) {
+  //     highlighterUtilsRef.current.scrollToHighlight(highlight);
+  //   }
+  // };
+
+  // // Hash listeners for autoscrolling to highlights
+  // useEffect(() => {
+  //   window.addEventListener("hashchange", scrollToHighlightFromHash);
+
+  //   return () => {
+  //     window.removeEventListener("hashchange", scrollToHighlightFromHash);
+  //   };
+  // }, [scrollToHighlightFromHash]);
+
+  return <div className="App"></div>;
 };
 
 export default App;

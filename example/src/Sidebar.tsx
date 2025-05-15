@@ -1,5 +1,5 @@
 import React from "react";
-import type { Highlight } from "./react-pdf-highlighter-extended";
+import type { Highlight } from "./react-pdf-highlighter-optimized";
 import "./style/Sidebar.css";
 import { CommentedHighlight } from "./types";
 
@@ -25,11 +25,11 @@ const Sidebar = ({
       {/* Description section */}
       <div className="description" style={{ padding: "1rem" }}>
         <h2 style={{ marginBottom: "1rem" }}>
-          react-pdf-highlighter-extended {APP_VERSION}
+          react-pdf-highlighter-optimized {APP_VERSION}
         </h2>
 
         <p style={{ fontSize: "0.7rem" }}>
-          <a href="https://github.com/DanielArnould/react-pdf-highlighter-extended">
+          <a href="https://github.com/DanielArnould/react-pdf-highlighter-optimized">
             Open in GitHub
           </a>
         </p>

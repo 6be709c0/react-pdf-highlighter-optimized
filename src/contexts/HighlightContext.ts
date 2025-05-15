@@ -40,6 +40,11 @@ export type HighlightContainerUtils<T extends Highlight = Highlight> = {
    */
   isScrolledTo: boolean;
 
+  // /**
+  //  * Whether the highlight has been autoscrolled to.
+  //  */
+  // isVisible: boolean;
+
   /**
    * All the DOM refs for the highlights shared on the same page
    * as `highlight`

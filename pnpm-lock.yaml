@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  react-pdf-highlighter-optimized: link:../../../Library/pnpm/global/5/node_modules/react-pdf-highlighter-optimized
+
 importers:
 
   .:
@@ -20,6 +23,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-pdf-highlighter-optimized:
+        specifier: link:../../../Library/pnpm/global/5/node_modules/react-pdf-highlighter-optimized
+        version: link:../../../Library/pnpm/global/5/node_modules/react-pdf-highlighter-optimized
       react-rnd:
         specifier: ^10.4.11
         version: 10.5.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
