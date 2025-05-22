@@ -39,7 +39,7 @@ export interface AreaHighlightProps {
   /**
    * Enable or disable editing of the highlight area.
    */
-  enableEdit?: boolean;
+  isEditEnabled?: boolean;
 
   /**
    * react-rnd bounds on the highlight area. This is useful for preventing the user
@@ -73,7 +73,7 @@ export interface AreaHighlightProps {
 export const AreaHighlight = ({
   highlight,
   onChange,
-  enableEdit,
+  isEditEnabled,
   isScrolledTo,
   bounds,
   onContextMenu,
@@ -82,12 +82,13 @@ export const AreaHighlight = ({
 }: AreaHighlightProps) => {
   const highlightClass = isScrolledTo ? "AreaHighlight--scrolledTo" : "";
 
+  const enableEdit = isEditEnabled || false;
   // Generate key based on position. This forces a remount (and a defaultpos update)
   // whenever highlight position changes (e.g., when updated, scale changes, etc.)
   // We don't use position as state because when updating Rnd this would happen and cause flickering:
   // User moves Rnd -> Rnd records new pos -> Rnd jumps back -> highlight updates -> Rnd re-renders at new pos
   const key = `${highlight.position.boundingRect.width}${highlight.position.boundingRect.height}${highlight.position.boundingRect.left}${highlight.position.boundingRect.top}`;
-
+  
   return (
     <div
       className={`AreaHighlight ${highlightClass}`}
@@ -95,10 +96,20 @@ export const AreaHighlight = ({
     >
       <Rnd
         className="AreaHighlight__part"
-        enableResizing={enableEdit}
+        dragAxis={!enableEdit ? "both" : "none"}
+        enableResizing={{
+          top: enableEdit,
+          right: enableEdit,
+          bottom: enableEdit,
+          left: enableEdit,
+          topRight: enableEdit,
+          bottomRight: enableEdit,
+          bottomLeft: enableEdit,
+          topLeft: enableEdit,
+        }}
         disableDragging={!enableEdit}
         onDragStop={(_, data) => {
-          if(!enableEdit) return;
+          if (!enableEdit) return;
           const boundingRect: LTWHP = {
             ...highlight.position.boundingRect,
             top: data.y,
@@ -108,7 +119,7 @@ export const AreaHighlight = ({
           onChange && onChange(boundingRect);
         }}
         onResizeStop={(_mouseEvent, _direction, ref, _delta, position) => {
-          if(!enableEdit) return;
+          if (!enableEdit) return;
           const boundingRect: LTWHP = {
             top: position.y,
             left: position.x,
@@ -120,11 +131,11 @@ export const AreaHighlight = ({
           onChange && onChange(boundingRect);
         }}
         onDragStart={(...args) => {
-          if(!enableEdit) return;
+          if (!enableEdit) return;
           onEditStart && onEditStart();
         }}
         onResizeStart={(...args) => {
-          if(!enableEdit) return;
+          if (!enableEdit) return;
           onEditStart && onEditStart();
         }}
         default={{

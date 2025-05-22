@@ -54,7 +54,7 @@ const HighlightContainer = ({
         isScrolledTo={isScrolledTo}
         // isScrolledTo={isScrolledTo || isVisible}
         highlight={highlight}
-        enableEdit={false}
+        isEditEnabled={false}
         onChange={(boundingRect) => {
           if (!enableEdit) return;
           const edit = {
@@ -72,12 +72,9 @@ const HighlightContainer = ({
         }}
         bounds={highlightBindings.textLayer}
         onContextMenu={(event) => {
-          console.log("CCC");
-
           onContextMenu && onContextMenu(event, highlight);
         }}
         onEditStart={() => {
-          console.log("BBB");
           toggleEditInProgress(true);
         }}
       />
