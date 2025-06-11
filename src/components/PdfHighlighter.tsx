@@ -417,7 +417,6 @@ export const PdfHighlighter = ({
 
   const renderHighlightLayers = () => {
     if (!viewerRef.current) return;
-    console.log("viewerRef.current", viewerRef.current);
     for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
       const highlightBindings = highlightBindingsRef.current[pageNumber];
 
@@ -430,7 +429,6 @@ export const PdfHighlighter = ({
         if (!textLayer) continue; // Viewer hasn't rendered page yet
 
         // textLayer.div for version >=3.0 and textLayer.textLayerDiv otherwise.
-        console.log("Creating highlight layer for", textLayer.div);
         const highlightLayer = findOrCreateHighlightLayer(textLayer.div);
 
         if (highlightLayer) {
@@ -440,7 +438,6 @@ export const PdfHighlighter = ({
             container: highlightLayer,
             textLayer: textLayer.div, // textLayer.div for version >=3.0 and textLayer.textLayerDiv otherwise.
           };
-          console.log("Rendering highlight layer for page", pageNumber);
           renderHighlightLayer(
             highlightBindingsRef.current[pageNumber],
             pageNumber
