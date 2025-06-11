@@ -1,7 +1,7 @@
 {
   "name": "react-pdf-highlighter-optimized",
   "type": "module",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Set of modern React components for PDF highlighting",
   "author": "Mathieu L <emergydev@gmail.com>",
   "license": "MIT",
