@@ -214,7 +214,7 @@ export const PdfHighlighter = ({
   );
   const ghostHighlightRef = useRef<GhostHighlight | null>(null);
   const selectionRef = useRef<PdfSelection | null>(null);
-  const scrolledToHighlightIdRef = useRef<string | null>(null);
+  const scrolledToHighlightIdRef = useRef<string[]>([]);
   const isAreaSelectionInProgressRef = useRef(false);
   const isEditInProgressRef = useRef(false);
   const updateTipPositionRef = useRef(() => {});
@@ -304,7 +304,7 @@ export const PdfHighlighter = ({
   // Event listeners
   const handleScroll = () => {
     onScrollAway && onScrollAway();
-    scrolledToHighlightIdRef.current = null;
+    scrolledToHighlightIdRef.current = [];
     renderHighlightLayers();
   };
 
@@ -406,7 +406,7 @@ export const PdfHighlighter = ({
             ghostHighlightRef.current,
           ])}
           pageNumber={pageNumber}
-          scrolledToHighlightId={scrolledToHighlightIdRef.current}
+          scrolledToHighlightIds={scrolledToHighlightIdRef.current}
           viewer={viewerRef.current}
           highlightBindings={highlightBindings}
           children={children}
@@ -417,7 +417,7 @@ export const PdfHighlighter = ({
 
   const renderHighlightLayers = () => {
     if (!viewerRef.current) return;
-
+    console.log("viewerRef.current", viewerRef.current);
     for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
       const highlightBindings = highlightBindingsRef.current[pageNumber];
 
@@ -430,6 +430,7 @@ export const PdfHighlighter = ({
         if (!textLayer) continue; // Viewer hasn't rendered page yet
 
         // textLayer.div for version >=3.0 and textLayer.textLayerDiv otherwise.
+        console.log("Creating highlight layer for", textLayer.div);
         const highlightLayer = findOrCreateHighlightLayer(textLayer.div);
 
         if (highlightLayer) {
@@ -439,7 +440,7 @@ export const PdfHighlighter = ({
             container: highlightLayer,
             textLayer: textLayer.div, // textLayer.div for version >=3.0 and textLayer.textLayerDiv otherwise.
           };
-
+          console.log("Rendering highlight layer for page", pageNumber);
           renderHighlightLayer(
             highlightBindingsRef.current[pageNumber],
             pageNumber
@@ -515,7 +516,7 @@ export const PdfHighlighter = ({
       ],
     });
 
-    scrolledToHighlightIdRef.current = highlight.id;
+    scrolledToHighlightIdRef.current = [highlight.id];
     renderHighlightLayers();
 
     // wait for scrolling to finish
@@ -525,6 +526,23 @@ export const PdfHighlighter = ({
       // });
     }, 100);
   };
+
+  const highlight = (highlight: Highlight) => {
+    // Add this highlight ID to the array without clearing others
+    if (!scrolledToHighlightIdRef.current.includes(highlight.id)) {
+      scrolledToHighlightIdRef.current.push(highlight.id);
+      renderHighlightLayers();
+    }
+  };
+
+  // Add a new function to clear highlights
+  const clearHighlights = () => {
+    scrolledToHighlightIdRef.current = [];
+    renderHighlightLayers();
+  };
+
+  //   renderHighlightLayers();
+  // };
 
   // const isVisible = (highlight: Highlight) => {
 
@@ -549,6 +567,8 @@ export const PdfHighlighter = ({
     isSelectionInProgress: () =>
       Boolean(selectionRef.current) || isAreaSelectionInProgressRef.current,
     scrollToHighlight,
+    clearHighlights,
+    highlight,
     getViewer: () => viewerRef.current,
     getTip: () => tip,
     setTip,

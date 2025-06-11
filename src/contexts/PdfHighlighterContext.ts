@@ -62,6 +62,19 @@ export type PdfHighlighterUtils = {
    * scroll to.
    */
   scrollToHighlight(highlight: Highlight): void;
+  /**
+   * Clear all highlights
+   *
+   */
+  clearHighlights(): void;
+
+  /**
+   * Highlight a specific highlight in the current PDF Viewer.
+   *
+   * @param highlight - A highlight provided to the {@link PdfHighlighter} to
+   * scroll to.
+   */
+  highlight(highlight: Highlight): void;
 
   /**
    * Get a reference to the currently used instance of a PDF Viewer.

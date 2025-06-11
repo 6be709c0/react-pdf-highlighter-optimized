@@ -37,7 +37,7 @@ export interface HighlightLayerProps {
   /**
    * ID of the highlight that the parent PDF Highlighter is trying to autoscroll to.
    */
-  scrolledToHighlightId?: string | null;
+  scrolledToHighlightIds?: string[];
 
   /**
    * The PDFViewer instance containing the HighlightLayer
@@ -69,7 +69,7 @@ export interface HighlightLayerProps {
 export const HighlightLayer = ({
   highlightsByPage,
   pageNumber,
-  scrolledToHighlightId,
+  scrolledToHighlightIds,
   viewer,
   highlightBindings,
   children,
@@ -85,8 +85,9 @@ export const HighlightLayer = ({
           position: scaledPositionToViewport(highlight.position, viewer),
         };
 
+        // Fix: Check if the highlight ID is included in the array
         const isScrolledTo = Boolean(
-          scrolledToHighlightId === viewportHighlight.id,
+          scrolledToHighlightIds?.includes(viewportHighlight.id)
         );
 
         const highlightUtils: HighlightContainerUtils = {
